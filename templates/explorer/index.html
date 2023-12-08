@@ -48,7 +48,8 @@
             <div class="row align-items-center">
                 <div class="col-md-9">
                     <a class="page-title" href="{% url 'explorer:index' %}">
-                        <img alt="Dogbolt Logo" src="/static/img/dogbolt-small.png">
+                        {% comment %} <img alt="Dogbolt Logo" src="/static/img/dogbolt-small.png"> {% endcomment %}
+                        <img alt="IDA logo" src="/static/img/IDAlogo.png">
                         <h1 class="my-0">Automated reverse engineering</h1>
                     </a>
                 </div>
@@ -74,7 +75,7 @@
         <div class="row my-3">
             <div class="col-md-6">
                 <h3>Upload File</h3>
-                <p>Your file must be <strong>less than 2MB</strong> in size. Uploaded binaries <a href="{% url 'explorer:faq' %}#">are retained</a>.
+                <p>Your file must be <strong>less than 20MB</strong> in size. Uploaded binaries <a>are retained</a>.
                 </p>
                 <form class="input-group" id="binary_upload_form">
                     <input type="file" class="form-control form-control-sm input-group-append" id="file" name="file" value required>
