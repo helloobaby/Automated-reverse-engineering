@@ -186,9 +186,29 @@ class IndexView(APIView):
     def get(self, request):
         # TODO: Whenever multi-version is ready, show em all
         decompilers = sorted(Decompiler.healthy_latest_versions().values(), key=lambda d: d.name.lower())
-        decompilers_json = {}
-        for d in decompilers:
-            decompilers_json[d.name] = model_to_dict(d)
+        decompilers_json = [
+            {
+                "featured":"true",
+                "name":"die",
+                "revision":"",
+                "url":"",
+                "version":"3.09"
+            },
+            {                
+                "featured":"false",
+                "name":"floss",
+                "revision":"",
+                "url":"",
+                "version":"2.3.0"
+            },
+            {                
+                "featured":"false",
+                "name":"capa",
+                "revision":"",
+                "url":"",
+                "version":"6.1.0"
+            }
+        ]
 
         featured_binaries = Binary.objects.filter(featured=True).order_by('featured_name')
         queue = DecompilationRequest.get_queue()

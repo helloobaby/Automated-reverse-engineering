@@ -1,5 +1,6 @@
 ace.config.set('basePath', 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/');
 
+// die floss capa and etc..
 let decompilerContainers = Object.fromEntries(
     Object.values(document.getElementsByClassName("decompiler_container"))
     .map(i => [i.id.replace(/(^container_)/, ''), i])
@@ -41,13 +42,22 @@ let decompilerSelectChecks = Object.fromEntries(
 let support_toolSelectChecks = Object.fromEntries(Object.values(document.getElementsByClassName("support_tools_select"))
 .map(i => [i.id.replace(/(^select_)/, ''), i]));
 
+
+
 let decompilerResultUrls = {};
 
 let decompilers = JSON.parse(document.getElementById("decompilers_json").textContent);
 
 Object.keys(decompilerSelectChecks).forEach((decompiler) => {
     let check = decompilerSelectChecks[decompiler];
-    let info = decompilers[decompiler];
+    var index=0;
+    for (let i = 0; i < decompilers.length; ++i){
+        if (decompilers[i]['name'] == decompiler){
+            index = i;
+            break;
+        }
+    }
+    let info = decompilers[index];
     check.checked = info.featured;
     check.addEventListener('change', () => {
         info.featured = check.checked;
@@ -89,7 +99,14 @@ function clearOutput(decompiler_name) {
 function updateFrames() {
     let hasPrevious = false;
     Object.keys(decompilerContainers).forEach((decompiler) => {
-        let info = decompilers[decompiler];
+        var index=0;
+    for (let i = 0; i < decompilers.length; ++i){
+        if (decompilers[i]['name'] == decompiler){
+            index = i;
+            break;
+        }
+    }
+        let info = decompilers[index];
 
         if (hasPrevious) {
             decompilerContainers[decompiler].classList.add('with_line');
