@@ -186,7 +186,6 @@ class IndexView(APIView):
     def get(self, request):
         # TODO: Whenever multi-version is ready, show em all
         decompilers = sorted(Decompiler.healthy_latest_versions().values(), key=lambda d: d.name.lower())
-
         decompilers_json = {}
         for d in decompilers:
             decompilers_json[d.name] = model_to_dict(d)
@@ -197,13 +196,16 @@ class IndexView(APIView):
         oldest_unfinished = queue['general']['oldest_unfinished']
         if oldest_unfinished is not None:
             show_banner = oldest_unfinished < timezone.now() - datetime.timedelta(minutes=10)
+            
+        support_tools = ['die','floss','capa']
 
         return Response({
             'serializer': BinarySerializer(),
             'decompilers': decompilers,
             'decompilers_json': decompilers_json,
             'featured_binaries': featured_binaries,
-            'show_banner': show_banner
+            'show_banner': show_banner,
+            'support_tools': support_tools
         })
 
 

@@ -38,6 +38,9 @@ let decompilerSelectChecks = Object.fromEntries(
     .map(i => [i.id.replace(/(^select_)/, ''), i])
 );
 
+let support_toolSelectChecks = Object.fromEntries(Object.values(document.getElementsByClassName("support_tools_select"))
+.map(i => [i.id.replace(/(^select_)/, ''), i]));
+
 let decompilerResultUrls = {};
 
 let decompilers = JSON.parse(document.getElementById("decompilers_json").textContent);

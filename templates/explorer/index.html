@@ -99,41 +99,39 @@
             </div>
         </div>
     </section>
-    <section id="decompilers" class="container flex-grow-1 d-flex flex-column">
-        <div class="row" id="decompiler_selectors">
-            {% for d in decompilers %}
-            <div class="col-xl col-lg-2 col-md-3 col-sm-4">
-                <label class="decompiler_selector" for="select_{{ d.name }}">
-                    <input type="checkbox" class="decompiler_select" id="select_{{ d.name }}">
-                    {{ d.name }}
-                </label>
+
+        
+        <section id="decompilers" class="container flex-grow-1 d-flex flex-column">
+            <div class="row" id="decompiler_selectors">
+                {% for d in support_tools %}
+                <div class="col-xl col-lg-2 col-md-3 col-sm-4">
+                    <label class="decompiler_selector" for="select_{{ d }}">
+                        <input type="checkbox" class="support_tools_select" id="select_{{ d }}">
+                        {{ d }}
+                    </label>
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
+
+
         <div class="row my-3 flex-grow-1" id="decompilers">
-            {% for d in decompilers %}
-            <div class="col d-flex flex-column decompiler decompiler_container" id="container_{{ d.name }}">
+            {% for d in support_tools %}
+            <div class="col d-flex flex-column decompiler decompiler_container" id="container_{{ d}}">
                 <div class="row">
                     <h5 class="d-inline-block">
-                        <a class="decompiler_title" data-umami-event="url_{{ d.name }}" id="title_{{ d.name }}" title="Website for {{ d.name }}" target="_blank" href="{{ d.url }}">{{ d.name }}</a>
-                        <a class="decompiler_rerun" id="rerun_{{ d.name }}" title="Re-run decompilation" hidden><i class='fas fa-redo'></i></a>
+                        <a class="decompiler_title" data-umami-event="url_{{ d }}" id="title_{{ d }}" title="Website for {{ d }}" target="_blank">{{ d }}</a>
+                        <a class="decompiler_rerun" id="rerun_{{ d }}" title="Re-run decompilation" hidden><i class='fas fa-redo'></i></a>
                     </h5>
-                    <div class="decompiler_version" id="version_{{ d.name }}"></div>
+                    <div class="decompiler_version" id="version_{{ d }}"></div>
                 </div>
                 <div class="row flex-grow-1">
-                    <div id="{{d.name}}" class="decompiler_output"></div>
+                    <div id="{{d}}" class="decompiler_output"></div>
                 </div>
             </div>
             {% endfor %}
         </div>
-    </section>
-    <footer>
-        <div class="container">
-            <div class="row justify-content-between text-center my-2">
-                <p class="mb-0 small">Decompiler Explorer is open source! Fork it on <a href="https://github.com/decompiler-explorer/decompiler-explorer">GitHub</a>!</p>
-            </div>
-        </div>
-    </footer>
+
+    
 </div>
 <script src="{% static 'js/index.js' %}"></script>
 <script async defer data-website-id="e8f5e886-a15e-4aca-9e17-4ebed158a438" src="https://stats.ext.v35.us/yummi.js"></script>
