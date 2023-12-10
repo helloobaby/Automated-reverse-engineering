@@ -251,31 +251,12 @@ function loadResults(is_sample) {
                 }
             })
             .then(data => {
-                let bestVersions = {};
-                for (let i of data['results']) {
-                    if (!Object.keys(bestVersions).includes(i['decompiler']['name'])) {
-                        bestVersions[i['decompiler']['name']] = i;
-                        continue;
-                    }
+                console.log(data['result'])
 
-                    let oldBest = bestVersions[i['decompiler']['name']];
-                    let oldVersion = oldBest['decompiler']['version'];
-                    let newVersion = i['decompiler']['version'];
+                updateTextEdit('die',data['die'])
+                finishedResults.push('die')
 
-                    if (compareVersions(oldVersion, newVersion)) {
-                        bestVersions[i['decompiler']['name']] = i;
-                    }
-                }
-
-                for (let i of Object.values(bestVersions)) {
-                    if (i['decompiler'] === null)
-                        continue;
-                    let decompilerName = i['decompiler']['name'];
-                    if (!finishedResults.includes(decompilerName)) {
-                        displayResult(i, is_sample);
-                        finishedResults.push(decompilerName);
-                    }
-                }
+                
             })
             .catch((e) => {
                 console.error(e);

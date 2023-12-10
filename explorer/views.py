@@ -1,6 +1,7 @@
 import datetime
 from logging import getLogger
 
+from django.http import JsonResponse
 from django.forms import model_to_dict
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
@@ -262,14 +263,29 @@ class QueueView(APIView):
 def ToolResult(request):
     print(os.path.abspath(__file__))
     
-    uuid = request.url.split('/')[]
+    uuid = request.path.split('/')[3]
+    uuid = uuid.replace('-','')
 
+    hash=''
+
+    find =False
     # 相对路径用不了
     for root, dirs, files in os.walk('/root/decompiler-explorer/media/uploads/binaries', topdown=False):
         for name in files:
             bin = Binary._default_manager.get(hash=name)
-            
+            if bin.id.hex == uuid:
+                find = True
+                hash = bin.hash
+                break
+    
+    if find == False:
+        print('uuid 对应的 hash256 搜索不到????')
 
-    if str(request.method) == 'GET':
-        print(request.url)
-        return HttpResponse("Welcome to Dashboard")
+    result = {"status": 200}
+
+    file_path = '/root/decompiler-explorer/media/uploads/binaries/'+hash
+
+    diec_result = os.popen('diec '+file_path)
+    result['die'] = diec_result.read()
+
+    return JsonResponse(result)

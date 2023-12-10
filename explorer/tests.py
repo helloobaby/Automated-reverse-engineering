@@ -10,4 +10,4 @@ import os
 ss='GET //tool/42973fd9-1bfb-490f-ab95-3b8516f379cd/ HTTP/1.1'
 a = ss.split('/')
 for s in a:
-    print(a)
+    print(s)
