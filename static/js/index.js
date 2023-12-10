@@ -168,7 +168,7 @@ function displayResult(resultData, is_sample) {
 
     fetch(url)
     .then(resp => resp.text())
-    .then(data => {
+    .then(data => {  // data就是反编译器的输出
         updateTextEdit(decompiler_name, data);
         loading[decompiler_name] = true;
         let lineNumbers = new URLSearchParams(window.location.hash.substring(1));
@@ -222,11 +222,15 @@ function loadResults(is_sample) {
         if (timerSchedule !== -1) {
             clearTimeout(timerSchedule);
         }
-
+        // 与decompilers_json同步
+        var m = new Map();
+        m.set('0','die');
+        m.set('1','floss');
+        m.set('2','capa');
         for (let decompilerName of Object.keys(decompilers)) {
-            if (finishedResults.indexOf(decompilerName) === -1) {
+            if (finishedResults.indexOf(m.get(decompilerName)) === -1) {
                 let elapsedSecs = ((Date.now() - startTime) / 1000).toFixed(0);
-                updateTextEdit(decompilerName, "// Waiting for data... (" + elapsedSecs + "s)");
+                updateTextEdit(m.get(decompilerName), "// Waiting for data... (" + elapsedSecs + "s)");
             }
         }
         if (finishedResults.length < numDecompilers) {
@@ -293,6 +297,10 @@ function uploadBinary() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     let uploadForm = document.getElementById('binary_upload_form');
+    if (uploadForm[0].files[0].size > 20*1000*1000){
+        alert('File too large')
+        return
+    }
     if (!uploadForm.checkValidity()) {
         uploadForm.reportValidity();
         return;
@@ -305,6 +313,7 @@ function uploadBinary() {
         headers: {'X-CSRFToken': csrfToken},
         mode: 'same-origin'
     })
+    //解析响应
     .then(async(resp) => {
         if (resp.ok) {
             return resp.json();
@@ -331,7 +340,7 @@ function uploadBinary() {
 }
 
 function loadAllDecompilers(binary_id, is_sample) {
-    resultUrl = `${location.origin}${location.pathname}api/binaries/${binary_id}/decompilations/`;
+    resultUrl = `${location.origin}${location.pathname}/tool/${binary_id}/`;
     loadResults(is_sample);
 }
 
@@ -368,7 +377,7 @@ function rerunDecompiler(decompiler_name) {
     }
 }
 
-
+// 上传文件回调
 document.getElementById('file').addEventListener('change', (e) => {
     e.preventDefault();
     clearFrameInputs();

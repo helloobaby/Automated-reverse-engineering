@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include,re_path
 
 from rest_framework import routers
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
@@ -26,15 +26,15 @@ from explorer import views
 router = routers.DefaultRouter()
 router.register('binaries', views.BinaryViewSet, basename='binary')
 router.register('binaries/(?P<binary_id>[a-f0-9-]+)/decompilations', views.DecompilationViewSet, basename='decompilation')
-router.register('decompilation_requests', views.DecompilationRequestViewSet, basename='decompilationrequest')
-router.register('decompilers', views.DecompilerViewSet, basename='decompiler')
-
+# router.register('decompilation_requests', views.DecompilationRequestViewSet, basename='decompilationrequest')
+# router.register('decompilers', views.DecompilerViewSet, basename='decompiler')
 
 urlpatterns = [
     path('', include('explorer.urls')),
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('api/queue', views.QueueView.as_view(renderer_classes=[JSONRenderer, BrowsableAPIRenderer]))
+    path('api/queue', views.QueueView.as_view(renderer_classes=[JSONRenderer, BrowsableAPIRenderer])),
+    re_path('tool/[a-f0-9-]+',views.ToolResult)
 ]
 
 

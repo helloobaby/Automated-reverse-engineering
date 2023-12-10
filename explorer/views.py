@@ -5,6 +5,7 @@ from django.forms import model_to_dict
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.http import HttpResponse
 
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.decorators import action
@@ -27,6 +28,7 @@ class DecompilationRequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelM
     permission_classes = [IsWorkerOrAdmin]
 
     def get_queryset(self):
+        print('DecompilationRequestViewSet->get_queryset')
         queryset = DecompilationRequest.objects.all()
 
         decompiler_id = self.request.query_params.get('decompiler')
@@ -97,6 +99,7 @@ class BinaryViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.L
         return [permission() for permission in permission_classes]
 
     def perform_create(self, serializer):
+        print('BinaryViewSet->perform_create')
         instance = serializer.save()
         for decompiler in Decompiler.healthy_latest_versions().values():
             _ = DecompilationRequest.objects.get_or_create(binary=instance, decompiler=decompiler)
@@ -136,7 +139,7 @@ class DecompilationViewSet(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, m
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
 
-    def get_queryset(self):
+    def get_queryset(self): # binary_id == uuid
         binary = self.get_binary()
         queryset = Decompilation.objects.filter(binary=binary)
         return queryset
@@ -246,7 +249,16 @@ class QueueView(APIView):
     template_name = 'explorer/queue.html'
 
     def get(self, request):
+        print('[DEBUG] QueueView (get)')
         if request.accepted_renderer.format == 'html':
             return Response({})
         else:
             return Response(DecompilationRequest.get_queue())
+
+
+
+def ToolResult(request):
+    print('Tool Result handle')
+    if str(request.method) == 'GET':
+        print(request.url)
+        return HttpResponse("Welcome to Dashboard")

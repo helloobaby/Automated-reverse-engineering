@@ -51,7 +51,7 @@ class BinarySerializer(WriteOnceMixin, serializers.ModelSerializer):
             binary = Binary._default_manager.get(hash=file_hash)
             binary.save()
             return binary
-        except Binary.DoesNotExist:
+        except Binary.DoesNotExist: # 文件不在创建文件
             validated_data['hash'] = file_hash
             return super().create(validated_data)
 
