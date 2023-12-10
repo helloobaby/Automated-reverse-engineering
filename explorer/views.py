@@ -13,6 +13,9 @@ from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+import uuid
+import re
+import os
 
 from .models import Binary, Decompilation, DecompilationRequest, Decompiler, rerun_binary_decompilation
 from .serializers import DecompilationRequestSerializer, DecompilationSerializer, BinarySerializer, \
@@ -84,7 +87,6 @@ class DecompilerViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixi
             featured = True
 
         serializer.save(featured=featured)
-
 
 class BinaryViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Binary.objects.all()
@@ -258,7 +260,16 @@ class QueueView(APIView):
 
 
 def ToolResult(request):
-    print('Tool Result handle')
+    print(os.path.abspath(__file__))
+    
+    uuid = request.url.split('/')[]
+
+    # 相对路径用不了
+    for root, dirs, files in os.walk('/root/decompiler-explorer/media/uploads/binaries', topdown=False):
+        for name in files:
+            bin = Binary._default_manager.get(hash=name)
+            
+
     if str(request.method) == 'GET':
         print(request.url)
         return HttpResponse("Welcome to Dashboard")
