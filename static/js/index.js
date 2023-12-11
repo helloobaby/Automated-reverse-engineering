@@ -252,11 +252,20 @@ function loadResults(is_sample) {
             })
             .then(data => {
                 console.log(data['result'])
-
+                
+                if (data.hasOwnProperty('die')){
                 updateTextEdit('die',data['die'])
                 finishedResults.push('die')
+                }
+                if (data.hasOwnProperty('floss')){
+                updateTextEdit('floss',data['floss'])
+                finishedResults.push('floss')
+                }
+                if (data.hasOwnProperty('capa')){
+                    updateTextEdit('capa',data['capa'])
+                    finishedResults.push('capa')
+                    }
 
-                
             })
             .catch((e) => {
                 console.error(e);

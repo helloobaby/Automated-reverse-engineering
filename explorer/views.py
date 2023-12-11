@@ -17,6 +17,8 @@ from rest_framework.views import APIView
 import uuid
 import re
 import os
+from queue import Queue,LifoQueue,PriorityQueue
+
 
 from .models import Binary, Decompilation, DecompilationRequest, Decompiler, rerun_binary_decompilation
 from .serializers import DecompilationRequestSerializer, DecompilationSerializer, BinarySerializer, \
@@ -26,6 +28,7 @@ from decompiler_explorer.throttle import AnonBurstRateThrottle, AnonSustainedRat
 from .permissions import IsWorkerOrAdmin, ReadOnly
 
 logger = getLogger('django')
+q = Queue(maxsize=0)
 
 class DecompilationRequestViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = DecompilationRequestSerializer
@@ -259,7 +262,6 @@ class QueueView(APIView):
             return Response(DecompilationRequest.get_queue())
 
 
-
 def ToolResult(request):
     print(os.path.abspath(__file__))
     
@@ -284,8 +286,28 @@ def ToolResult(request):
     result = {"status": 200}
 
     file_path = '/root/decompiler-explorer/media/uploads/binaries/'+hash
-
-    diec_result = os.popen('diec '+file_path)
-    result['die'] = diec_result.read()
+    
+    # 队列为空,放入两个任务,时间从低到高
+    if q.empty() :
+        q.put('diec')
+        q.put('floss')
+        q.put('capa')
+    
+    c_task=q.get()
+    print('[ddddbbbbbgggg]get task ' + c_task)
+    diec_result = os.popen(c_task+' '+file_path)
+    if c_task == 'diec':
+        c_task='die'
+    
+    result_str = diec_result.read()
+    result[c_task] = result_str
+    if (result_str == '' and c_task == 'floss'):
+        print('[ddddbbbbgggg]floss dont support type, try --format sc64')
+        diec_result = os.popen(c_task+' --format sc64 '+file_path)
+        result[c_task] = diec_result.read()
+    
+        
+    
+    print(diec_result.read())
 
     return JsonResponse(result)

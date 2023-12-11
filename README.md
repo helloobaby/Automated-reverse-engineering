@@ -4,9 +4,11 @@
 - python >= 3.8
 
 ## Run
-python3 run ./manage.py migrate  
-python3 run ./manage.py collectstatic  
-python3 run ./manage.py ensure_admin  
+python3 ./manage.py migrate  
+python3 ./manage.py collectstatic  
+python3 ./manage.py ensure_admin  
+
+python3 ./manage.py runserver 0.0.0.0:7755
 
 
 Credits to  
