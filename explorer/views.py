@@ -295,7 +295,10 @@ def ToolResult(request):
     
     c_task=q.get()
     print('[ddddbbbbbgggg]get task ' + c_task)
-    diec_result = os.popen(c_task+' '+file_path)
+    if c_task == 'capa':
+        diec_result = os.popen(c_task+' -vv '+file_path) 
+    else:
+        diec_result = os.popen(c_task+' '+file_path)
     if c_task == 'diec':
         c_task='die'
     
